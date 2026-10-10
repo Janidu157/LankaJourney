@@ -54,6 +54,10 @@ namespace LankaJourneyUI {
 	private: System::Windows::Forms::Button^ btnDashboard;
 	private: System::Windows::Forms::PictureBox^ horizontalLine;
 	private: System::Windows::Forms::Panel^ pnlForButton;
+	private: System::Windows::Forms::Panel^ destinationsPanel;
+	private: System::Windows::Forms::Button^ nextButton;
+	private: System::Windows::Forms::Button^ previousButton;
+	private: System::Windows::Forms::PictureBox^ destinationPictureBox;
 
 
 
@@ -90,10 +94,16 @@ namespace LankaJourneyUI {
 			this->btnPlanning = (gcnew System::Windows::Forms::Button());
 			this->btnDashboard = (gcnew System::Windows::Forms::Button());
 			this->pnlForButton = (gcnew System::Windows::Forms::Panel());
+			this->destinationsPanel = (gcnew System::Windows::Forms::Panel());
+			this->destinationPictureBox = (gcnew System::Windows::Forms::PictureBox());
+			this->previousButton = (gcnew System::Windows::Forms::Button());
+			this->nextButton = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->PanelSlidebar->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->horizontalLine))->BeginInit();
 			this->pnlForButton->SuspendLayout();
+			this->destinationsPanel->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->destinationPictureBox))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// pictureBox1
@@ -251,6 +261,45 @@ namespace LankaJourneyUI {
 			this->pnlForButton->Size = System::Drawing::Size(396, 77);
 			this->pnlForButton->TabIndex = 5;
 			// 
+			// destinationsPanel
+			// 
+			this->destinationsPanel->Controls->Add(this->nextButton);
+			this->destinationsPanel->Controls->Add(this->previousButton);
+			this->destinationsPanel->Controls->Add(this->destinationPictureBox);
+			this->destinationsPanel->Location = System::Drawing::Point(298, 438);
+			this->destinationsPanel->Name = L"destinationsPanel";
+			this->destinationsPanel->Size = System::Drawing::Size(935, 187);
+			this->destinationsPanel->TabIndex = 6;
+			// 
+			// destinationPictureBox
+			// 
+			this->destinationPictureBox->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"destinationPictureBox.BackgroundImage")));
+			this->destinationPictureBox->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->destinationPictureBox->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->destinationPictureBox->Location = System::Drawing::Point(0, 0);
+			this->destinationPictureBox->Name = L"destinationPictureBox";
+			this->destinationPictureBox->Size = System::Drawing::Size(935, 187);
+			this->destinationPictureBox->TabIndex = 0;
+			this->destinationPictureBox->TabStop = false;
+			// 
+			// previousButton
+			// 
+			this->previousButton->Location = System::Drawing::Point(733, 110);
+			this->previousButton->Name = L"previousButton";
+			this->previousButton->Size = System::Drawing::Size(43, 23);
+			this->previousButton->TabIndex = 1;
+			this->previousButton->Text = L"<-";
+			this->previousButton->UseVisualStyleBackColor = true;
+			// 
+			// nextButton
+			// 
+			this->nextButton->Location = System::Drawing::Point(810, 110);
+			this->nextButton->Name = L"nextButton";
+			this->nextButton->Size = System::Drawing::Size(43, 23);
+			this->nextButton->TabIndex = 2;
+			this->nextButton->Text = L"->";
+			this->nextButton->UseVisualStyleBackColor = true;
+			// 
 			// Dashboard
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -258,6 +307,7 @@ namespace LankaJourneyUI {
 			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(3)), static_cast<System::Int32>(static_cast<System::Byte>(7)),
 				static_cast<System::Int32>(static_cast<System::Byte>(30)));
 			this->ClientSize = System::Drawing::Size(1262, 673);
+			this->Controls->Add(this->destinationsPanel);
 			this->Controls->Add(this->pnlForButton);
 			this->Controls->Add(this->PanelSlidebar);
 			this->Controls->Add(this->pictureBox1);
@@ -270,6 +320,8 @@ namespace LankaJourneyUI {
 			this->PanelSlidebar->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->horizontalLine))->EndInit();
 			this->pnlForButton->ResumeLayout(false);
+			this->destinationsPanel->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->destinationPictureBox))->EndInit();
 			this->ResumeLayout(false);
 
 		}
