@@ -58,9 +58,9 @@ namespace LankaJourneyUI {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(LoginForm::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->panel2->SuspendLayout();
 			this->SuspendLayout();
@@ -72,7 +72,7 @@ namespace LankaJourneyUI {
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
 			this->panel1->Name = L"panel1";
-			this->panel1->Padding = System::Windows::Forms::Padding(200, 85, 700, 15);
+			this->panel1->Padding = System::Windows::Forms::Padding(270, 85, 630, 15);
 			this->panel1->Size = System::Drawing::Size(1262, 673);
 			this->panel1->TabIndex = 0;
 			// 
@@ -82,39 +82,46 @@ namespace LankaJourneyUI {
 			this->panel2->Controls->Add(this->textBox1);
 			this->panel2->Controls->Add(this->button1);
 			this->panel2->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->panel2->Location = System::Drawing::Point(200, 85);
+			this->panel2->Location = System::Drawing::Point(270, 85);
 			this->panel2->Name = L"panel2";
-			this->panel2->Padding = System::Windows::Forms::Padding(20, 175, 20, 150);
+			this->panel2->Padding = System::Windows::Forms::Padding(19, 175, 19, 150);
 			this->panel2->Size = System::Drawing::Size(362, 573);
 			this->panel2->TabIndex = 0;
 			// 
-			// button1
-			// 
-			this->button1->Dock = System::Windows::Forms::DockStyle::Bottom;
-			this->button1->Location = System::Drawing::Point(20, 360);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(322, 63);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
-			// 
-			// textBox1
-			// 
-			this->textBox1->Dock = System::Windows::Forms::DockStyle::Top;
-			this->textBox1->Location = System::Drawing::Point(20, 175);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(322, 50);
-			this->textBox1->TabIndex = 1;
-			// 
 			// textBox2
 			// 
-			this->textBox2->Dock = System::Windows::Forms::DockStyle::Top;
-			this->textBox2->Location = System::Drawing::Point(20, 225);
+			this->textBox2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(23)), static_cast<System::Int32>(static_cast<System::Byte>(6)),
+				static_cast<System::Int32>(static_cast<System::Byte>(12)));
+			this->textBox2->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->textBox2->Location = System::Drawing::Point(19, 249);
 			this->textBox2->Multiline = true;
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(322, 50);
 			this->textBox2->TabIndex = 2;
+			// 
+			// textBox1
+			// 
+			this->textBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(23)), static_cast<System::Int32>(static_cast<System::Byte>(6)),
+				static_cast<System::Int32>(static_cast<System::Byte>(12)));
+			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+			this->textBox1->Dock = System::Windows::Forms::DockStyle::Top;
+			this->textBox1->Location = System::Drawing::Point(19, 175);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(324, 50);
+			this->textBox1->TabIndex = 1;
+			// 
+			// button1
+			// 
+			this->button1->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.BackgroundImage")));
+			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->button1->Dock = System::Windows::Forms::DockStyle::Bottom;
+			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button1->Location = System::Drawing::Point(19, 360);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(324, 63);
+			this->button1->TabIndex = 0;
+			this->button1->UseVisualStyleBackColor = true;
 			// 
 			// LoginForm
 			// 
