@@ -48,7 +48,7 @@ The desktop WPF app loads the WebUI files bundled beside the built application; 
    ```
 
    If MySQL is remote, create the account for the appropriate client host instead of `localhost` and configure the server firewall accordingly.
-5. Start the app and enter the server, port, database, username and password in the **MySQL database setup** window. The app tests the connection before saving it, and encrypts the connection string using Windows DPAPI for the current Windows account. You can update it later with the **Database settings** button. The optional `LANKAJOURNEY_MYSQL_CONNECTION` environment variable remains supported for development, but normal app use does not require it.
+5. Start the app and enter the server, port, database, username and password in the **MySQL database setup** window. The app tests the connection before saving it, and encrypts the connection string using Windows DPAPI for the current Windows account. The database toolbar is hidden after a connection has been saved successfully. Press **Ctrl+D** at any time to open or close the database settings window. The optional `LANKAJOURNEY_MYSQL_CONNECTION` environment variable remains supported for development, but normal app use does not require it.
 
 The planner reads `Tourist_Places`, `Accommodation`, `Restaurant`, and their related `Location` records. Its database account only needs `SELECT` access.
 

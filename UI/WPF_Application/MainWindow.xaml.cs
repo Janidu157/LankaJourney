@@ -1,8 +1,10 @@
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows;
+using System.Windows.Interop;
 using Microsoft.Web.WebView2.Core;
 using MySqlConnector;
 
@@ -14,29 +16,88 @@ public partial class MainWindow : Window
     private string webContentRoot = string.Empty;
     private string connectionString = string.Empty;
     private JsonObject? pendingJourney;
+    private DatabaseSetupWindow? activeDatabaseSetupWindow;
+    private HwndSource? windowSource;
+    private bool databaseSettingsShortcutRegistered;
+
+    private const int DatabaseSettingsHotkeyId = 0x4C4A;
+    private const int WmHotkey = 0x0312;
+    private const uint ModifierControl = 0x0002;
+    private const uint ModifierNoRepeat = 0x4000;
+    private const uint VirtualKeyD = 0x44;
 
     public MainWindow()
     {
         InitializeComponent();
+        SourceInitialized += RegisterDatabaseSettingsShortcut;
+        Closed += UnregisterDatabaseSettingsShortcut;
         Loaded += async (_, _) => await InitializeAsync();
+    }
+
+    private void RegisterDatabaseSettingsShortcut(object? sender, EventArgs eventArgs)
+    {
+        IntPtr handle = new WindowInteropHelper(this).Handle;
+        windowSource = HwndSource.FromHwnd(handle);
+        windowSource?.AddHook(WindowMessageHook);
+        databaseSettingsShortcutRegistered =
+            RegisterHotKey(handle, DatabaseSettingsHotkeyId, ModifierControl | ModifierNoRepeat, VirtualKeyD);
+        if (!databaseSettingsShortcutRegistered)
+        {
+            MessageBox.Show(this,
+                "Ctrl+D could not be registered because another application is using it. Close that application and restart LankaJourney to enable the database settings shortcut.",
+                "Shortcut unavailable", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void UnregisterDatabaseSettingsShortcut(object? sender, EventArgs eventArgs)
+    {
+        windowSource?.RemoveHook(WindowMessageHook);
+        if (databaseSettingsShortcutRegistered)
+        {
+            UnregisterHotKey(new WindowInteropHelper(this).Handle, DatabaseSettingsHotkeyId);
+            databaseSettingsShortcutRegistered = false;
+        }
+    }
+
+    private IntPtr WindowMessageHook(
+        IntPtr windowHandle,
+        int message,
+        IntPtr wParam,
+        IntPtr lParam,
+        ref bool handled)
+    {
+        if (message == WmHotkey && wParam.ToInt32() == DatabaseSettingsHotkeyId)
+        {
+            handled = true;
+            ToggleDatabaseSettings();
+        }
+        return IntPtr.Zero;
     }
 
     private async Task InitializeAsync()
     {
         try
         {
-            connectionString = DatabaseConnectionSettings.LoadConnectionString()
-                ?? Environment.GetEnvironmentVariable("LANKAJOURNEY_MYSQL_CONNECTION")
-                ?? string.Empty;
+            string? savedConnectionString = DatabaseConnectionSettings.LoadConnectionString();
+            if (!string.IsNullOrWhiteSpace(savedConnectionString))
+            {
+                connectionString = savedConnectionString;
+                databaseToolbar.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                connectionString = Environment.GetEnvironmentVariable("LANKAJOURNEY_MYSQL_CONNECTION")
+                    ?? string.Empty;
+            }
+
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                var setupWindow = new DatabaseSetupWindow { Owner = this };
-                if (setupWindow.ShowDialog() != true)
+                if (!ShowDatabaseSetup())
                 {
                     Close();
                     return;
                 }
-                connectionString = setupWindow.ConnectionString;
+                databaseToolbar.Visibility = Visibility.Collapsed;
             }
 
             await webView.EnsureCoreWebView2Async();
@@ -65,10 +126,41 @@ public partial class MainWindow : Window
 
     private void DatabaseSettingsButton_Click(object sender, RoutedEventArgs eventArgs)
     {
-        var setupWindow = new DatabaseSetupWindow(connectionString) { Owner = this };
-        if (setupWindow.ShowDialog() == true)
+        if (ShowDatabaseSetup())
         {
+            databaseToolbar.Visibility = Visibility.Collapsed;
+            MessageBox.Show(this, "The MySQL connection was tested and saved for your Windows account.",
+                "Database settings", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private bool ShowDatabaseSetup()
+    {
+        var setupWindow = new DatabaseSetupWindow(connectionString) { Owner = this };
+        activeDatabaseSetupWindow = setupWindow;
+        try
+        {
+            if (setupWindow.ShowDialog() != true) return false;
             connectionString = setupWindow.ConnectionString;
+            return true;
+        }
+        finally
+        {
+            activeDatabaseSetupWindow = null;
+        }
+    }
+
+    private void ToggleDatabaseSettings()
+    {
+        if (activeDatabaseSetupWindow is { IsVisible: true } setupWindow)
+        {
+            setupWindow.Close();
+            return;
+        }
+
+        if (ShowDatabaseSetup())
+        {
+            databaseToolbar.Visibility = Visibility.Collapsed;
             MessageBox.Show(this, "The MySQL connection was tested and saved for your Windows account.",
                 "Database settings", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -96,6 +188,7 @@ public partial class MainWindow : Window
                 new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true })
                 ?? throw new InvalidOperationException("The journey requirements could not be read.");
             pendingJourney = await planningService.CreateJourneyAsync(requirements, connectionString);
+            databaseToolbar.Visibility = Visibility.Collapsed;
             webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
             {
                 type = "journeyReady"
@@ -145,4 +238,12 @@ public partial class MainWindow : Window
         string expectedPath = Path.GetFullPath(Path.Combine(webContentRoot, pageName));
         return string.Equals(sourcePath, expectedPath, StringComparison.OrdinalIgnoreCase);
     }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool RegisterHotKey(IntPtr windowHandle, int id, uint modifiers, uint virtualKey);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool UnregisterHotKey(IntPtr windowHandle, int id);
 }

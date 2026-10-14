@@ -11,3 +11,6 @@ $env:LANKAJOURNEY_MYSQL_CONNECTION = "Server=127.0.0.1;Port=3306;Database=LankaS
 #To run the application
 
 dotnet run --project .\UI\WPF_Application\WPF_Application.csproj
+
+
+The Shortcut to change database setting at runtime : "Ctrl + D"
