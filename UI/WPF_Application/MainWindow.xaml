@@ -1,0 +1,14 @@
+﻿<Window x:Class="WPF_Application.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        mc:Ignorable="d"
+        Title="LankaJourney" Height="750" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <!-- Fills entire window and loads your game -->
+        <wv2:WebView2 x:Name="webView" Source="https://janidu157.github.io/LankaJourney/UI/WebUI/index.html" />
+    </Grid>
+</Window>
