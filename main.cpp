@@ -325,6 +325,9 @@ public:
     double maximumDistanceKm() const {
         if (travelRange == "nearby") return 100;
         if (travelRange == "regional") return 250;
+        if (days <= 2) return 100;
+        if (days <= 4) return 200;
+        if (days <= 6) return 350;
         return std::numeric_limits<double>::infinity();
     }
 
@@ -349,8 +352,24 @@ public:
         std::vector<Place> selected;
         selected.reserve(std::min(static_cast<size_t>(days), candidates.size()));
 
+        if (days <= 6) {
+            std::stable_sort(candidates.begin(), candidates.end(), [this](const Place& left, const Place& right) {
+                const int leftScore = preferenceScore(left);
+                const int rightScore = preferenceScore(right);
+                if (leftScore != rightScore) return leftScore > rightScore;
+                const double leftDistance = distanceFromStartingPoint(left);
+                const double rightDistance = distanceFromStartingPoint(right);
+                if (leftDistance != rightDistance) return leftDistance < rightDistance;
+                return left.name < right.name;
+            });
+            if (candidates.size() > static_cast<size_t>(days)) {
+                candidates.resize(static_cast<size_t>(days));
+            }
+            selected = std::move(candidates);
+        }
+
         // Farthest-point selection prevents the start location from dominating island-wide plans.
-        while (!candidates.empty() && selected.size() < static_cast<size_t>(days)) {
+        while (days > 6 && !candidates.empty() && selected.size() < static_cast<size_t>(days)) {
             size_t bestIndex = 0;
             int bestScore = -1;
             double bestSpread = -1;

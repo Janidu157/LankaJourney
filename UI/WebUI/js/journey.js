@@ -171,7 +171,17 @@
 
   function describeTravelRange(journey) {
     if (journey.travelRange === "island-wide") {
-      return "Across Sri Lanka: destinations are selected for island-wide variety, then ordered into a route from your start.";
+      const days = Array.isArray(journey.days) ? journey.days.length : 0;
+      if (days <= 4) {
+        return "Flexible travel: this shorter trip focuses on strong matches closer to your start.";
+      }
+      if (days <= 6 && journey.distanceLimitKm > 0) {
+        return `Flexible travel: this ${days}-day trip prioritizes strong matches, while allowing destinations up to ${journey.distanceLimitKm} km away.`;
+      }
+      if (journey.distanceLimitKm > 0 && journey.distanceLimitKm < 1000) {
+        return `Flexible travel: this ${days}-day trip can reach places up to ${journey.distanceLimitKm} km from your start.`;
+      }
+      return "Flexible travel: this longer trip can explore across Sri Lanka, with stops ordered into a route from your start.";
     }
     return `${travelRangeLabel(journey)} from your start (straight-line distance).`;
   }
