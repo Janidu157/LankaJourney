@@ -133,11 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dashboard.cpp" />
+    <ClCompile Include="GettingUserData.cpp" />
     <ClCompile Include="LoginForm.cpp" />
     <ClCompile Include="registerform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dashboard.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="GettingUserData.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="LoginForm.h">
@@ -150,6 +154,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GettingUserData.resx">
+      <DependentUpon>GettingUserData.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.h</DependentUpon>
