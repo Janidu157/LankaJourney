@@ -29,6 +29,7 @@ Travelers often need a centralized system to discover places, compare stay optio
 - Structured relational database design for travel data
 - Personalized day-by-day itineraries generated from the planning form
 - Starting-point selection from Katunayake International Airport or a pickup location chosen on the map
+- Destination travel-range preferences: nearby, regional, or across Sri Lanka
 
 ## Technology Stack
 

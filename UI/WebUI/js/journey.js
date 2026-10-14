@@ -1,6 +1,7 @@
 (() => {
   const journeyText = document.getElementById("journeySummary");
   const journeyStartSummary = document.getElementById("journeyStartSummary");
+  const journeyRangeSummary = document.getElementById("journeyRangeSummary");
   const mapMessage = document.getElementById("mapMessage");
   const stayDetails = document.getElementById("stayDetails");
   const journeyDays = document.getElementById("journeyDays");
@@ -17,6 +18,7 @@
   function showEmptyJourney() {
     journeyText.textContent = "No journey is available yet. Enter your preferences to create one.";
     journeyStartSummary.textContent = "";
+    journeyRangeSummary.textContent = "";
     mapMessage.textContent = "";
     const link = document.createElement("a");
     link.className = "btn btn-gold";
@@ -36,6 +38,7 @@
     journeyStartSummary.textContent = journey.startingPoint?.name
       ? `Starting from ${journey.startingPoint.name}.`
       : "";
+    journeyRangeSummary.textContent = describeTravelRange(journey);
     mapMessage.textContent = journey.mapMessage || "";
     initializeMap(journey);
 
@@ -94,7 +97,9 @@
         flexibleDay.textContent = "Flexible day";
         card.append(flexibleDay);
         card.append(createParagraph(
-          "No more matching destinations were available in the database; enjoy a relaxed day near your stay."
+          journey.travelRange === "nearby" || journey.travelRange === "regional"
+            ? `No more matching destinations were found within your selected ${travelRangeLabel(journey)} range. You can choose a wider range to explore more places.`
+            : "No more matching destinations were available in the database; enjoy a relaxed day near your stay."
         ));
       }
 
@@ -162,6 +167,16 @@
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return hours > 0 ? `${hours} hr ${minutes} min` : `${minutes} min`;
+  }
+
+  function describeTravelRange(journey) {
+    return `${travelRangeLabel(journey)} from your start (straight-line distance).`;
+  }
+
+  function travelRangeLabel(journey) {
+    if (journey.travelRange === "nearby") return "Nearby (up to 100 km)";
+    if (journey.travelRange === "regional") return "Explore further (up to 250 km)";
+    return "Across Sri Lanka (no distance limit)";
   }
 
   function initializeMap(journey) {

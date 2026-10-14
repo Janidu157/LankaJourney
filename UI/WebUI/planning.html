@@ -116,6 +116,28 @@
 
       <section class="panel planning-card">
         <div class="planning-section-heading">
+          <span class="quick-icon"><i data-lucide="route"></i></span>
+          <div><h2>How far would you like to travel?</h2><p>Choose how far destinations may be from your starting point. Distances are approximate straight-line ranges.</p></div>
+        </div>
+        <fieldset class="travel-range-options">
+          <legend class="sr-only">Preferred destination travel range</legend>
+          <label class="starting-option">
+            <input type="radio" name="travelRange" value="nearby">
+            <span><strong>Nearby</strong><small>Up to 100 km from your start</small></span>
+          </label>
+          <label class="starting-option">
+            <input type="radio" name="travelRange" value="regional">
+            <span><strong>Explore further</strong><small>Up to 250 km from your start</small></span>
+          </label>
+          <label class="starting-option">
+            <input type="radio" name="travelRange" value="island-wide" checked>
+            <span><strong>Across Sri Lanka</strong><small>Any distance — include faraway places</small></span>
+          </label>
+        </fieldset>
+      </section>
+
+      <section class="panel planning-card">
+        <div class="planning-section-heading">
           <span class="quick-icon"><i data-lucide="map"></i></span>
           <div><h2>What would you like to explore?</h2><p>Select as many destinations and experiences as you like.</p></div>
         </div>

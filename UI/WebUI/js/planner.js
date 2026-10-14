@@ -63,7 +63,8 @@
       days,
       nights,
       destinations,
-      startingPoint
+      startingPoint,
+      travelRange: form.elements.namedItem("travelRange").value
     };
 
     localStorage.setItem("ljPlanning", JSON.stringify(plan));

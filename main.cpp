@@ -287,6 +287,7 @@ public:
     double totalBudget = 0, budgetPerDay = 0;
     int days = 0, nights = 0;
     std::string startingPointName;
+    std::string travelRange = "island-wide";
     double startingPointLatitude = 0, startingPointLongitude = 0;
     std::vector<std::string> destinations;
 
@@ -305,6 +306,7 @@ public:
         startingPointName = startingPoint.get("name").text();
         startingPointLatitude = startingLatitude.numeric();
         startingPointLongitude = startingLongitude.numeric();
+        travelRange = requirements.get("travelRange").text();
         for (const JsonValue& destination : requirements.get("destinations").array) {
             if (destination.kind == JsonValue::Kind::String) destinations.push_back(destination.string);
         }
@@ -313,9 +315,16 @@ public:
             startingLongitude.kind != JsonValue::Kind::Number || !std::isfinite(startingPointLatitude) ||
             startingPointLatitude < -90 || startingPointLatitude > 90 ||
             !std::isfinite(startingPointLongitude) ||
-            startingPointLongitude < -180 || startingPointLongitude > 180) {
+            startingPointLongitude < -180 || startingPointLongitude > 180 ||
+            (travelRange != "nearby" && travelRange != "regional" && travelRange != "island-wide")) {
             throw std::runtime_error("Journey requirements are invalid.");
         }
+    }
+
+    double maximumDistanceKm() const {
+        if (travelRange == "nearby") return 100;
+        if (travelRange == "regional") return 250;
+        return std::numeric_limits<double>::infinity();
     }
 
     double distanceFromStartingPoint(const Place& place) const {
@@ -420,7 +429,8 @@ public:
             return left.name < right.name;
         });
         places.erase(std::remove_if(places.begin(), places.end(), [this](const Place& place) {
-            return preferenceScore(place) == 0;
+            return preferenceScore(place) == 0 ||
+                   distanceFromStartingPoint(place) > maximumDistanceKm();
         }), places.end());
 
         std::vector<Accommodation> accommodations;
@@ -505,7 +515,10 @@ public:
                << ",\"startingPoint\":{\"name\":" << escaped(startingPointName)
                << ",\"latitude\":" << jsonNumber(startingPointLatitude)
                << ",\"longitude\":" << jsonNumber(startingPointLongitude)
-               << "},\"accommodationEstimate\":"
+               << "},\"travelRange\":" << escaped(travelRange)
+               << ",\"distanceLimitKm\":"
+               << (std::isfinite(maximumDistanceKm()) ? jsonNumber(maximumDistanceKm()) : "null")
+               << ",\"accommodationEstimate\":"
                << jsonNumber(stay == nullptr ? 0 : stay->price * nights)
                << ",\"accommodationWithinBudget\":"
                << (stay == nullptr || nightlyBudget <= 0 || stay->price <= nightlyBudget ? "true" : "false")

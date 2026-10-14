@@ -21,6 +21,7 @@ public sealed class PlanningRequest
     public int Nights { get; init; }
     public string[] Destinations { get; init; } = [];
     public StartingPointRequest StartingPoint { get; init; } = new();
+    public string TravelRange { get; init; } = "island-wide";
 }
 
 public sealed class StartingPointRequest
@@ -154,6 +155,10 @@ public sealed class JourneyPlanningService
             request.Destinations.Any(destination => !allowedDestinations.Contains(destination, StringComparer.Ordinal)))
         {
             throw new InvalidOperationException("Select at least one valid destination or experience.");
+        }
+        if (request.TravelRange is not ("nearby" or "regional" or "island-wide"))
+        {
+            throw new InvalidOperationException("Choose a valid destination travel range.");
         }
         if (string.IsNullOrWhiteSpace(request.StartingPoint.Name) ||
             !request.StartingPoint.Latitude.HasValue ||

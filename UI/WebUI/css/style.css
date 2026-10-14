@@ -1691,6 +1691,15 @@ tbody tr:hover {
     margin: 0 0 18px
 }
 
+.travel-range-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    border: 0;
+    padding: 0;
+    margin: 0
+}
+
 .starting-option {
     position: relative;
     cursor: pointer
@@ -2032,6 +2041,10 @@ tbody tr:hover {
     }
 
     .starting-options {
+        grid-template-columns: 1fr
+    }
+
+    .travel-range-options {
         grid-template-columns: 1fr
     }
 
