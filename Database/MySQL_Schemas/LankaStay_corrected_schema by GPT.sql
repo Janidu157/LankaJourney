@@ -18,6 +18,7 @@ CREATE TABLE Accommodation (
     Location_ID VARCHAR(10),
     Rating FLOAT,
     Food_Avialability BOOLEAN,
+    Website VARCHAR(200),
     FOREIGN KEY (Location_ID) REFERENCES Location(Location_ID)
 );
 

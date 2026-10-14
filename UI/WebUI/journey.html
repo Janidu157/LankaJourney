@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Journey | LankaJourney</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">〽</span><span>Lanka<span>Journey</span></span></a>
+    <div class="top-actions">
+      <button class="icon-btn" id="notifyBtn" aria-label="Notifications"><i data-lucide="bell"></i></button>
+      <button class="profile-btn" id="profileBtn" aria-label="Profile"><i data-lucide="user-round"></i></button>
+    </div>
+  </header>
+  <aside class="sidebar">
+    <div class="side-label">MENU</div>
+    <nav>
+      <a class="nav-link" href="index.html"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+      <a class="nav-link active" href="planning.html" aria-current="page"><i data-lucide="clipboard-list"></i>Planning</a>
+      <a class="nav-link" href="destinations.html"><i data-lucide="map-pin"></i>Locations</a>
+      <a class="nav-link" href="accommodations.html"><i data-lucide="bed-double"></i>Hotels</a>
+      <a class="nav-link" href="restaurants.html"><i data-lucide="utensils"></i>Restaurants</a>
+      <a class="nav-link" href="vehicles.html"><i data-lucide="car-front"></i>Vehicles</a>
+      <a class="nav-link" href="bookings.html"><i data-lucide="ticket"></i>Bookings</a>
+    </nav>
+    <div class="side-divider"></div>
+    <a class="nav-link" href="settings.html"><i data-lucide="settings"></i>Settings</a>
+    <div class="sidebar-bottom">
+      <div class="mini-avatar">LJ</div>
+      <div><b>Travel with Lanka</b><small>Your journey starts here</small></div>
+    </div>
+  </aside>
+  <main class="main-content">
+    <div class="page-title">
+      <div>
+        <span class="eyebrow">MADE FOR YOU</span>
+        <h1>Your Sri Lankan <em>journey</em></h1>
+        <p id="journeySummary">Your preferences are being shaped into a day-by-day itinerary.</p>
+      </div>
+    </div>
+    <section class="journey-map-note" id="mapMessage" role="status"></section>
+    <section class="journey-map-section panel" aria-label="Journey map">
+      <div class="planning-section-heading">
+        <span class="quick-icon"><i data-lucide="map"></i></span>
+        <div><h2>Journey map</h2><p>OpenStreetMap locations and the driving route in your itinerary order.</p></div>
+      </div>
+      <div id="journeyMap" role="application" aria-label="Interactive map showing accommodation and itinerary destinations"></div>
+      <p class="journey-map-attribution">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>. Driving routes are provided by the public OSRM demo service.</p>
+    </section>
+    <section class="journey-stay panel">
+      <div class="planning-section-heading">
+        <span class="quick-icon"><i data-lucide="bed-double"></i></span>
+        <div><h2>Your suggested stay</h2><p>Chosen to fit your accommodation budget and rating preferences.</p></div>
+      </div>
+      <div id="stayDetails"></div>
+    </section>
+    <section class="journey-days">
+      <div class="journey-section-title">
+        <span class="eyebrow">YOUR ITINERARY</span>
+        <h2>Day by day</h2>
+      </div>
+      <div id="journeyDays"></div>
+    </section>
+    <section class="journey-budget panel">
+      <h2>Budget notes</h2>
+      <div id="budgetDetails"></div>
+      <p>Restaurant and transport prices are not stored in the current database, so they are not included in the cost estimate.</p>
+    </section>
+    <div class="journey-actions">
+      <a class="btn btn-gold" href="planning.html"><i data-lucide="arrow-left"></i> Adjust your requirements</a>
+    </div>
+    <footer>© 2026 LankaJourney <span>Made for memorable journeys in Sri Lanka</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/journey.js"></script>
+</body>
+
+</html>

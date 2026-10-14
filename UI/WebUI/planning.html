@@ -80,10 +80,10 @@
         </div>
         <div class="planning-fields duration-fields">
           <label>Number of days
-            <span class="number-input"><input type="number" name="days" min="1" step="1" placeholder="e.g. 7" required inputmode="numeric"><span>days</span></span>
+            <span class="number-input"><input type="number" name="days" min="1" max="30" step="1" placeholder="e.g. 7" required inputmode="numeric"><span>days</span></span>
           </label>
           <label>Number of nights
-            <span class="number-input"><input type="number" name="nights" min="0" step="1" placeholder="e.g. 6" required inputmode="numeric"><span>nights</span></span>
+            <span class="number-input"><input type="number" name="nights" min="0" max="30" step="1" placeholder="e.g. 6" required inputmode="numeric"><span>nights</span></span>
           </label>
         </div>
       </section>
@@ -108,14 +108,15 @@
         </fieldset>
       </section>
       <div class="planning-actions">
-        <p>Your plan is saved on this device.</p>
-        <button class="btn btn-gold" type="submit">Save my plan <i data-lucide="arrow-right"></i></button>
+        <p>We’ll match your interests with places, stays and OpenStreetMap driving routes.</p>
+        <button class="btn btn-gold" type="submit">Explore the journey <i data-lucide="arrow-right"></i></button>
       </div>
     </form>
     <footer>© 2026 LankaJourney <span>Made for memorable journeys in Sri Lanka</span></footer>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="js/app.js"></script>
+  <script src="js/planner.js"></script>
 </body>
 
 </html>

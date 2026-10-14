@@ -1885,3 +1885,151 @@ tbody tr:hover {
         grid-template-columns: 1fr
     }
 }
+
+.journey-map-note {
+    margin-bottom: 18px;
+    padding: 13px 16px;
+    border: 1px solid #d99c424d;
+    border-radius: 10px;
+    background: #ffb02e0a;
+    color: #e9c583;
+    font-size: 12px;
+    line-height: 1.6
+}
+
+.journey-map-section {
+    padding: 24px;
+    margin-bottom: 22px
+}
+
+#journeyMap {
+    width: 100%;
+    height: 440px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #dbe4e8;
+    z-index: 0
+}
+
+.journey-map-attribution {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.6
+}
+
+.journey-map-attribution a {
+    color: var(--gold2);
+    text-decoration: underline
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    color: #17202b
+}
+
+.journey-stay,
+.journey-budget {
+    padding: 24px;
+    margin-bottom: 22px
+}
+
+.journey-stay h3,
+.journey-day-card h3 {
+    margin: 0 0 12px;
+    font-size: 17px
+}
+
+.journey-detail {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px
+}
+
+.journey-detail strong {
+    color: var(--text);
+    font-weight: 600;
+    text-align: right
+}
+
+.journey-section-title {
+    margin: 30px 0 14px
+}
+
+.journey-section-title h2 {
+    margin: 6px 0 0;
+    font-size: 21px
+}
+
+.journey-day-card {
+    padding: 22px 24px;
+    margin-bottom: 14px
+}
+
+.journey-day-heading {
+    margin-bottom: 13px
+}
+
+.journey-day-number {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .8px
+}
+
+.journey-day-card h4 {
+    margin: 20px 0 4px;
+    font-size: 12px
+}
+
+.journey-muted,
+.journey-budget>p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7
+}
+
+.journey-warning {
+    color: #ffd16c;
+    font-size: 12px;
+    line-height: 1.6
+}
+
+.journey-budget>p {
+    margin: 16px 0 0
+}
+
+.journey-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin: 22px 0
+}
+
+@media(max-width:760px) {
+    .journey-stay,
+    .journey-budget,
+    .journey-day-card,
+    .journey-map-section {
+        padding: 18px
+    }
+
+    #journeyMap {
+        height: 340px
+    }
+
+    .journey-detail {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px
+    }
+
+    .journey-detail strong {
+        text-align: left
+    }
+}

@@ -7,10 +7,27 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+    <PackageReference Include="MySqlConnector" Version="2.4.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\WebUI\**\*">
+      <Link>WebUI\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="BuildNativeJourneyPlanner"
+          BeforeTargets="PrepareForBuild"
+          Inputs="$(MSBuildProjectDirectory)\..\..\main.cpp"
+          Outputs="$(OutDir)planner.exe">
+    <MakeDir Directories="$(OutDir)" />
+    <Exec Command="g++ -std=c++17 -O2 -static &quot;$(MSBuildProjectDirectory)\..\..\main.cpp&quot; -o &quot;$(OutDir)planner.exe&quot;" />
+  </Target>
 
 </Project>
