@@ -57,6 +57,10 @@
             "Microsoft.Web.WebView2": {
               "target": "Package",
               "version": "[1.0.4258.31, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.4.0, )"
             }
           },
           "imports": [

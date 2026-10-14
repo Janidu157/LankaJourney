@@ -1,8 +1,13 @@
-To setup connection
+# To move the project directory
+
+cd "E:\Education\Undergraduate\RUSL\1st Year\2nd Sem\COM1305\Project_LankaJourney\GithubRepo\LankaJourney"
+
+
+#To setup connection
 
 $env:LANKAJOURNEY_MYSQL_CONNECTION = "Server=127.0.0.1;Port=3306;Database=LankaStay;User ID=lankajourney_app;Password=1234;"
 
 
-To run the application
+#To run the application
 
 dotnet run --project .\UI\WPF_Application\WPF_Application.csproj
