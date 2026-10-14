@@ -12,6 +12,7 @@ public partial class MainWindow : Window
 {
     private readonly JourneyPlanningService planningService = new();
     private string webContentRoot = string.Empty;
+    private string connectionString = string.Empty;
     private JsonObject? pendingJourney;
 
     public MainWindow()
@@ -24,6 +25,20 @@ public partial class MainWindow : Window
     {
         try
         {
+            connectionString = DatabaseConnectionSettings.LoadConnectionString()
+                ?? Environment.GetEnvironmentVariable("LANKAJOURNEY_MYSQL_CONNECTION")
+                ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                var setupWindow = new DatabaseSetupWindow { Owner = this };
+                if (setupWindow.ShowDialog() != true)
+                {
+                    Close();
+                    return;
+                }
+                connectionString = setupWindow.ConnectionString;
+            }
+
             await webView.EnsureCoreWebView2Async();
             webView.CoreWebView2.WebMessageReceived += HandleWebMessage;
             webView.CoreWebView2.NavigationCompleted += HandleNavigationCompleted;
@@ -37,11 +52,25 @@ public partial class MainWindow : Window
 
             webView.Source = new Uri(indexPath);
         }
-        catch (Exception exception) when (exception is IOException or InvalidOperationException or System.Runtime.InteropServices.COMException)
+        catch (Exception exception) when (exception is IOException or InvalidOperationException or
+                                          System.Security.Cryptography.CryptographicException or
+                                          System.ComponentModel.Win32Exception or
+                                          System.Runtime.InteropServices.COMException)
         {
             MessageBox.Show(this, $"LankaJourney could not start: {exception.Message}", "Startup error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
             Close();
+        }
+    }
+
+    private void DatabaseSettingsButton_Click(object sender, RoutedEventArgs eventArgs)
+    {
+        var setupWindow = new DatabaseSetupWindow(connectionString) { Owner = this };
+        if (setupWindow.ShowDialog() == true)
+        {
+            connectionString = setupWindow.ConnectionString;
+            MessageBox.Show(this, "The MySQL connection was tested and saved for your Windows account.",
+                "Database settings", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -66,7 +95,7 @@ public partial class MainWindow : Window
             PlanningRequest requirements = planElement.Deserialize<PlanningRequest>(
                 new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = true })
                 ?? throw new InvalidOperationException("The journey requirements could not be read.");
-            pendingJourney = await planningService.CreateJourneyAsync(requirements);
+            pendingJourney = await planningService.CreateJourneyAsync(requirements, connectionString);
             webView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
             {
                 type = "journeyReady"

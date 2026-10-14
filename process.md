@@ -48,13 +48,7 @@ The desktop WPF app loads the WebUI files bundled beside the built application; 
    ```
 
    If MySQL is remote, create the account for the appropriate client host instead of `localhost` and configure the server firewall accordingly.
-5. In the PowerShell window that will launch the app, configure the connection string. The environment variable is read by the WPF process; do not put a real password in source files or commit it:
-
-   ```powershell
-   $env:LANKAJOURNEY_MYSQL_CONNECTION = "Server=127.0.0.1;Port=3306;Database=LankaStay;User ID=lankajourney_app;Password=choose-a-local-password;"
-   ```
-
-   Use the correct server, port, username and password for your MySQL installation.
+5. Start the app and enter the server, port, database, username and password in the **MySQL database setup** window. The app tests the connection before saving it, and encrypts the connection string using Windows DPAPI for the current Windows account. You can update it later with the **Database settings** button. The optional `LANKAJOURNEY_MYSQL_CONNECTION` environment variable remains supported for development, but normal app use does not require it.
 
 The planner reads `Tourist_Places`, `Accommodation`, `Restaurant`, and their related `Location` records. Its database account only needs `SELECT` access.
 
@@ -68,21 +62,21 @@ The basemap tiles and public routing service need internet access. If the tile p
 
 ## Build and run
 
-From the repository root in PowerShell:
+Build the project once from Visual Studio or PowerShell:
 
 ```powershell
 dotnet build .\UI\WPF_Application\WPF_Application.csproj
-dotnet run --project .\UI\WPF_Application\WPF_Application.csproj
 ```
 
-The first build restores the WPF and MySQL Connector dependencies, compiles `main.cpp` into the WPF output directory, and copies the WebUI assets there. Keep the MySQL connection environment variable set in the same PowerShell session when running the app. Submit the planning form and the journey result opens inside the desktop application.
+The first build restores the WPF and MySQL Connector dependencies, compiles `main.cpp` into the WPF output directory, and copies the WebUI assets there. After building, open `UI\WPF_Application\bin\Debug\net10.0-windows\WPF_Application.exe` to start the app; no PowerShell commands are needed each time. Keep the MySQL Server service running. On first launch, enter your database settings in the app, which will save the tested connection securely for your Windows account.
 
-If using Visual Studio, open `UI/WPF_Application/WPF_Application.slnx`, ensure `g++` is available to the Visual Studio process, and run the WPF project. Set the MySQL connection environment variable in the Visual Studio launch environment. A missing MySQL setting, failed MySQL connection, or missing native executable is reported on the planning page instead of being presented as a successful plan; a routing-service problem is shown alongside the generated itinerary.
+If using Visual Studio, open `UI/WPF_Application/WPF_Application.slnx`, ensure `g++` is available to the Visual Studio process, and build/run the WPF project. A failed MySQL connection or missing native executable is reported on the planning page instead of being presented as a successful plan; a routing-service problem is shown alongside the generated itinerary.
 
 ## Main files
 
 - `main.cpp` — C++17 `user` model, preference matching, accommodation ranking, day-by-day itinerary and JSON protocol.
 - `UI/WPF_Application/MainWindow.xaml.cs` — local WebView2 hosting, request validation and browser/native message bridge.
+- `UI/WPF_Application/DatabaseSetupWindow.xaml` and `DatabaseConnectionSettings.cs` — first-run MySQL setup and current-Windows-user DPAPI-protected connection storage.
 - `UI/WPF_Application/JourneyPlanningService.cs` — MySQL catalog reads, native process lifecycle, OSRM route request and result handling.
 - `UI/WebUI/planning.html` and `UI/WebUI/js/planner.js` — journey preference form and WPF bridge client.
 - `UI/WebUI/journey.html` and `UI/WebUI/js/journey.js` — generated itinerary and Leaflet/OpenStreetMap map display.

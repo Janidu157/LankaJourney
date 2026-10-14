@@ -8,7 +8,19 @@
         Title="LankaJourney" Height="750" Width="1000"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <!-- Fills entire window and loads your game -->
-        <wv2:WebView2 x:Name="webView" Source="https://janidu157.github.io/LankaJourney/UI/WebUI/index.html" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#111A23" Padding="12,7">
+            <DockPanel LastChildFill="False">
+                <TextBlock Text="LankaJourney" Foreground="#FFFFFF" FontSize="14"
+                           FontWeight="SemiBold" VerticalAlignment="Center" />
+                <Button x:Name="databaseSettingsButton" Content="Database settings"
+                        DockPanel.Dock="Right" Padding="12,6" Margin="12,0,0,0"
+                        Click="DatabaseSettingsButton_Click" />
+            </DockPanel>
+        </Border>
+        <wv2:WebView2 x:Name="webView" Grid.Row="1" />
     </Grid>
 </Window>

@@ -14,6 +14,8 @@ This project aims to provide a simple but effective travel planning experience f
 
 The desktop application uses a C# WPF shell with WebView2 for its interface, a native C++17 journey-planning engine, and MySQL for travel data. Leaflet.js with public OpenStreetMap tiles displays the journey map; public OSRM routes provide driving distances without a billing account or API key.
 
+After building once, launch `UI\WPF_Application\bin\Debug\net10.0-windows\WPF_Application.exe` directly. On first launch, enter and test your MySQL connection in the app; it is encrypted for your Windows account. Keep the MySQL Server service running while using LankaJourney.
+
 ## Problem Addressed
 
 Travelers often need a centralized system to discover places, compare stay options, and plan their routes without switching between multiple sources. LankaJourney tries to simplify this by combining location data and travel services into one integrated platform.
@@ -36,6 +38,7 @@ Travelers often need a centralized system to discover places, compare stay optio
 - C# WPF and WebView2 (.NET 10)
 - C++17 (`g++`) native itinerary planner
 - MySQL Server and MySQL Connector
+- Windows DPAPI-protected MySQL connection settings
 - Leaflet.js, OpenStreetMap tiles and public OSRM driving routes
 
 ## Repository Structure

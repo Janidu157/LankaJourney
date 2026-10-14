@@ -37,13 +37,12 @@ public sealed class JourneyPlanningService
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly HttpClient httpClient = new();
 
-    public async Task<JsonObject> CreateJourneyAsync(PlanningRequest requirements, CancellationToken cancellationToken = default)
+    public async Task<JsonObject> CreateJourneyAsync(
+        PlanningRequest requirements,
+        string connectionString,
+        CancellationToken cancellationToken = default)
     {
         Validate(requirements);
-
-        string connectionString = Environment.GetEnvironmentVariable("LANKAJOURNEY_MYSQL_CONNECTION")
-            ?? throw new InvalidOperationException(
-                "MySQL is not configured. Set the LANKAJOURNEY_MYSQL_CONNECTION environment variable; see process.md.");
 
         string plannerPath = Path.Combine(AppContext.BaseDirectory, "planner.exe");
         if (!File.Exists(plannerPath))
