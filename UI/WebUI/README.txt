@@ -2,7 +2,7 @@ LANKAJOURNEY - HTML, CSS, JavaScript Frontend
 
 FILES
 - index.html          Dashboard / home
-- locations.html      Search and filter destinations
+- accommodations.html      Search and filter destinations
 - hotels.html         Hotel cards and demo booking
 - restaurants.html    Restaurant cards and demo booking
 - vehicles.html       Vehicle choices and demo booking
