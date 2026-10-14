@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "5Ysjl2GxYB0=",
+  "success": true,
+  "projectFilePath": "E:\\Education\\Undergraduate\\RUSL\\1st Year\\2nd Sem\\COM1305\\Project_LankaJourney\\GithubRepo\\LankaJourney\\UI\\WPF_Application\\WPF_Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Janidu\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.12\\microsoft.net.illink.tasks.10.0.12.nupkg.sha512",
+    "C:\\Users\\Janidu\\.nuget\\packages\\microsoft.web.webview2\\1.0.4258.31\\microsoft.web.webview2.1.0.4258.31.nupkg.sha512",
+    "C:\\Users\\Janidu\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\10.0.12\\microsoft.netcore.app.runtime.win-x86.10.0.12.nupkg.sha512",
+    "C:\\Users\\Janidu\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\10.0.12\\microsoft.windowsdesktop.app.runtime.win-x86.10.0.12.nupkg.sha512",
+    "C:\\Users\\Janidu\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\10.0.12\\microsoft.aspnetcore.app.runtime.win-x86.10.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}
