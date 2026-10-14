@@ -1682,6 +1682,171 @@ tbody tr:hover {
     max-width: 620px
 }
 
+.starting-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    border: 0;
+    padding: 0;
+    margin: 0 0 18px
+}
+
+.starting-option {
+    position: relative;
+    cursor: pointer
+}
+
+.starting-option input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer
+}
+
+.starting-option span {
+    min-height: 72px;
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    padding: 12px 15px;
+    border: 1px solid #ffffff1a;
+    border-radius: 10px;
+    background: #0c151f;
+    color: #e4e0dc;
+    transition: .2s
+}
+
+.starting-option strong {
+    font-size: 12px
+}
+
+.starting-option small {
+    color: var(--muted);
+    font-size: 11px
+}
+
+.starting-option input:checked+span {
+    border-color: #d99c42;
+    background: #4b170f;
+    box-shadow: inset 0 0 0 1px #d99c4225
+}
+
+.starting-option input:focus-visible+span {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px
+}
+
+.pickup-map-actions {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) auto;
+    align-items: end;
+    gap: 12px
+}
+
+.pickup-name-label {
+    display: grid;
+    gap: 8px;
+    color: #e4e0dc;
+    font-size: 12px;
+    font-weight: 600
+}
+
+.pickup-name-label input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #ffffff1a;
+    border-radius: 10px;
+    background: #0c151f;
+    color: var(--text);
+    outline: 0
+}
+
+.pickup-name-label input:focus {
+    border-color: #d99c42;
+    box-shadow: 0 0 0 3px #ffb02e16
+}
+
+.pickup-location-status {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--muted);
+    font-size: 11px
+}
+
+.pickup-map-dialog {
+    width: min(900px, calc(100% - 32px));
+    max-width: none;
+    max-height: calc(100% - 32px);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #111a23;
+    color: var(--text)
+}
+
+.pickup-map-dialog::backdrop {
+    background: #05090dcc;
+    backdrop-filter: blur(3px)
+}
+
+.pickup-map-dialog-content {
+    padding: 20px
+}
+
+.pickup-map-dialog-heading,
+.pickup-map-dialog-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px
+}
+
+.pickup-map-dialog-heading {
+    margin-bottom: 14px
+}
+
+.pickup-map-dialog-heading h2 {
+    margin: 0 0 5px;
+    font-size: 18px
+}
+
+.pickup-map-dialog-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px
+}
+
+#pickupMap {
+    width: 100%;
+    height: min(58vh, 480px);
+    min-height: 280px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #dbe4e8;
+    z-index: 0
+}
+
+.pickup-map-selection {
+    min-height: 18px;
+    margin: 12px 0;
+    color: #e9c583;
+    font-size: 12px
+}
+
+.pickup-map-dialog-actions {
+    justify-content: flex-end
+}
+
+.pickup-map-dialog #confirmPickupMap:disabled {
+    opacity: .5;
+    cursor: not-allowed
+}
+
 .planning-fields>label {
     display: grid;
     gap: 8px;
@@ -1866,6 +2031,18 @@ tbody tr:hover {
         grid-template-columns: repeat(2, minmax(0, 1fr))
     }
 
+    .starting-options {
+        grid-template-columns: 1fr
+    }
+
+    .pickup-map-actions {
+        grid-template-columns: 1fr
+    }
+
+    .pickup-location-status {
+        grid-column: auto
+    }
+
     .planning-actions {
         align-items: stretch;
         flex-direction: column
@@ -1895,6 +2072,12 @@ tbody tr:hover {
     color: #e9c583;
     font-size: 12px;
     line-height: 1.6
+}
+
+.journey-start-summary {
+    margin: 10px 0 0;
+    color: #e9c583;
+    font-size: 13px
 }
 
 .journey-map-section {

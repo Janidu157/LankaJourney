@@ -28,6 +28,7 @@ Travelers often need a centralized system to discover places, compare stay optio
 - Restaurant details with ratings and contact information
 - Structured relational database design for travel data
 - Personalized day-by-day itineraries generated from the planning form
+- Starting-point selection from Katunayake International Airport or a pickup location chosen on the map
 
 ## Technology Stack
 

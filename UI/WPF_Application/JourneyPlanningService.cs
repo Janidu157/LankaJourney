@@ -20,6 +20,14 @@ public sealed class PlanningRequest
     public int Days { get; init; }
     public int Nights { get; init; }
     public string[] Destinations { get; init; } = [];
+    public StartingPointRequest StartingPoint { get; init; } = new();
+}
+
+public sealed class StartingPointRequest
+{
+    public string Name { get; init; } = string.Empty;
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
 }
 
 public sealed class JourneyPlanningService
@@ -147,6 +155,16 @@ public sealed class JourneyPlanningService
         {
             throw new InvalidOperationException("Select at least one valid destination or experience.");
         }
+        if (string.IsNullOrWhiteSpace(request.StartingPoint.Name) ||
+            !request.StartingPoint.Latitude.HasValue ||
+            !double.IsFinite(request.StartingPoint.Latitude.Value) ||
+            request.StartingPoint.Latitude.Value is < -90 or > 90 ||
+            !request.StartingPoint.Longitude.HasValue ||
+            !double.IsFinite(request.StartingPoint.Longitude.Value) ||
+            request.StartingPoint.Longitude.Value is < -180 or > 180)
+        {
+            throw new InvalidOperationException("Choose a valid starting point for your journey.");
+        }
     }
 
     private static async Task<(List<PlaceRow>, List<AccommodationRow>, List<RestaurantRow>)> LoadCatalogAsync(
@@ -223,11 +241,11 @@ public sealed class JourneyPlanningService
         JsonArray days = journey["days"]?.AsArray()
             ?? throw new InvalidOperationException("The native journey planner did not return any days.");
 
-        JsonObject? accommodation = journey["accommodation"] as JsonObject;
+        JsonObject? startingPoint = journey["startingPoint"] as JsonObject;
         var routeStops = new List<(JsonObject? Day, double Latitude, double Longitude)>();
-        if (TryCoordinates(accommodation, out double hotelLatitude, out double hotelLongitude))
+        if (TryCoordinates(startingPoint, out double startLatitude, out double startLongitude))
         {
-            routeStops.Add((null, hotelLatitude, hotelLongitude));
+            routeStops.Add((null, startLatitude, startLongitude));
         }
 
         var destinationDays = new List<JsonObject>();
@@ -249,7 +267,7 @@ public sealed class JourneyPlanningService
         if (routeStops.Count < 2 || routeStops[0].Day is not null)
         {
             journey["mapMessage"] =
-                "OpenStreetMap shows available destination markers, but a driving route needs coordinates for the suggested accommodation and at least one destination.";
+                "OpenStreetMap shows available locations, but a driving route needs coordinates for your starting point and at least one destination.";
             return;
         }
 
@@ -315,13 +333,13 @@ public sealed class JourneyPlanningService
                 day["routeDistanceMeters"] = distanceMeters;
                 day["routeDuration"] = $"{durationSeconds.ToString(CultureInfo.InvariantCulture)}s";
                 day["routeFrom"] = legIndex == 0
-                    ? "the suggested accommodation"
+                    ? startingPoint?["name"]?.GetValue<string>() ?? "your starting point"
                     : "the previous mapped stop";
             }
 
             journey["routeCoordinates"] = JsonNode.Parse(routeCoordinates.GetRawText());
             journey["mapMessage"] =
-                "OpenStreetMap map data © OpenStreetMap contributors. Driving routes and distances are provided by the public OSRM demo service; distances follow your itinerary order.";
+                "OpenStreetMap map data © OpenStreetMap contributors. Driving routes and distances are provided by the public OSRM demo service; the route starts at your selected pickup point.";
         }
         catch (HttpRequestException)
         {

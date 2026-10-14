@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planning | LankaJourney</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -90,6 +91,31 @@
 
       <section class="panel planning-card">
         <div class="planning-section-heading">
+          <span class="quick-icon"><i data-lucide="map-pin"></i></span>
+          <div><h2>Where will your journey start?</h2><p>Start from the airport or choose your home, hotel, or another pickup point on the map.</p></div>
+        </div>
+        <fieldset class="starting-options">
+          <legend class="sr-only">Choose your starting point</legend>
+          <label class="starting-option">
+            <input type="radio" name="startingPointType" value="airport" checked>
+            <span><strong>Katunayake International Airport</strong><small>Convenient for international arrivals</small></span>
+          </label>
+          <label class="starting-option">
+            <input type="radio" name="startingPointType" value="map">
+            <span><strong>Choose a pickup point</strong><small>Set your home or another location on the map</small></span>
+          </label>
+        </fieldset>
+        <div class="pickup-map-actions">
+          <label class="pickup-name-label" for="pickupName">Pickup name <small class="field-hint">Optional</small>
+            <input id="pickupName" name="pickupName" type="text" maxlength="100" placeholder="e.g. My home in Kandy" autocomplete="street-address">
+          </label>
+          <button class="btn btn-outline" type="button" id="openPickupMap"><i data-lucide="map"></i> Set pickup on map</button>
+          <p class="pickup-location-status" id="pickupLocationStatus" role="status">Starting from Katunayake International Airport.</p>
+        </div>
+      </section>
+
+      <section class="panel planning-card">
+        <div class="planning-section-heading">
           <span class="quick-icon"><i data-lucide="map"></i></span>
           <div><h2>What would you like to explore?</h2><p>Select as many destinations and experiences as you like.</p></div>
         </div>
@@ -114,8 +140,23 @@
     </form>
     <footer>© 2026 LankaJourney <span>Made for memorable journeys in Sri Lanka</span></footer>
   </main>
+  <dialog class="pickup-map-dialog" id="pickupMapDialog" aria-labelledby="pickupMapTitle">
+    <div class="pickup-map-dialog-content">
+      <div class="pickup-map-dialog-heading">
+        <div><h2 id="pickupMapTitle">Set your pickup point</h2><p>Click the map to place the starting point for your journey.</p></div>
+        <button class="icon-btn" type="button" id="closePickupMap" aria-label="Close map"><i data-lucide="x"></i></button>
+      </div>
+      <div id="pickupMap" role="application" aria-label="Map for selecting your journey pickup point"></div>
+      <p class="pickup-map-selection" id="pickupMapSelection" role="status">Click the map to select a location.</p>
+      <div class="pickup-map-dialog-actions">
+        <button class="btn btn-outline" type="button" id="cancelPickupMap">Cancel</button>
+        <button class="btn btn-gold" type="button" id="confirmPickupMap" disabled>Use this pickup point</button>
+      </div>
+    </div>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="js/app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/planner.js"></script>
 </body>
 

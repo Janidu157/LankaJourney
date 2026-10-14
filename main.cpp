@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <sstream>
 #include <stdexcept>
@@ -285,6 +286,8 @@ public:
     double accommodationBudget = 0, foodBudget = 0, transportBudget = 0, activityBudget = 0;
     double totalBudget = 0, budgetPerDay = 0;
     int days = 0, nights = 0;
+    std::string startingPointName;
+    double startingPointLatitude = 0, startingPointLongitude = 0;
     std::vector<std::string> destinations;
 
     explicit user(const JsonValue& requirements) {
@@ -296,12 +299,36 @@ public:
         budgetPerDay = requirements.get("budgetPerDay").numeric();
         days = static_cast<int>(requirements.get("days").numeric());
         nights = static_cast<int>(requirements.get("nights").numeric());
+        const JsonValue& startingPoint = requirements.get("startingPoint");
+        const JsonValue& startingLatitude = startingPoint.get("latitude");
+        const JsonValue& startingLongitude = startingPoint.get("longitude");
+        startingPointName = startingPoint.get("name").text();
+        startingPointLatitude = startingLatitude.numeric();
+        startingPointLongitude = startingLongitude.numeric();
         for (const JsonValue& destination : requirements.get("destinations").array) {
             if (destination.kind == JsonValue::Kind::String) destinations.push_back(destination.string);
         }
-        if (days < 1 || days > 30 || nights < 0 || nights > days || destinations.empty()) {
+        if (days < 1 || days > 30 || nights < 0 || nights > days || destinations.empty() ||
+            startingPointName.empty() || startingLatitude.kind != JsonValue::Kind::Number ||
+            startingLongitude.kind != JsonValue::Kind::Number || !std::isfinite(startingPointLatitude) ||
+            startingPointLatitude < -90 || startingPointLatitude > 90 ||
+            !std::isfinite(startingPointLongitude) ||
+            startingPointLongitude < -180 || startingPointLongitude > 180) {
             throw std::runtime_error("Journey requirements are invalid.");
         }
+    }
+
+    double distanceFromStartingPoint(const Place& place) const {
+        if (!place.hasCoordinates) return std::numeric_limits<double>::infinity();
+        constexpr double pi = 3.14159265358979323846;
+        const double latitude1 = startingPointLatitude * pi / 180;
+        const double latitude2 = place.latitude * pi / 180;
+        const double latitudeDelta = (place.latitude - startingPointLatitude) * pi / 180;
+        const double longitudeDelta = (place.longitude - startingPointLongitude) * pi / 180;
+        const double haversine = std::sin(latitudeDelta / 2) * std::sin(latitudeDelta / 2) +
+            std::cos(latitude1) * std::cos(latitude2) *
+            std::sin(longitudeDelta / 2) * std::sin(longitudeDelta / 2);
+        return 6371 * 2 * std::asin(std::sqrt(std::min(1.0, haversine)));
     }
 
     int preferenceScore(const Place& place) const {
@@ -387,6 +414,9 @@ public:
             const int leftScore = preferenceScore(left);
             const int rightScore = preferenceScore(right);
             if (leftScore != rightScore) return leftScore > rightScore;
+            const double leftDistance = distanceFromStartingPoint(left);
+            const double rightDistance = distanceFromStartingPoint(right);
+            if (leftDistance != rightDistance) return leftDistance < rightDistance;
             return left.name < right.name;
         });
         places.erase(std::remove_if(places.begin(), places.end(), [this](const Place& place) {
@@ -472,7 +502,10 @@ public:
         const Accommodation* stay = accommodations.empty() ? nullptr : &accommodations.front();
         std::ostringstream output;
         output << "{\"summary\":" << escaped("A " + std::to_string(days) + "-day Sri Lanka journey planned around your selected interests.")
-               << ",\"accommodationEstimate\":"
+               << ",\"startingPoint\":{\"name\":" << escaped(startingPointName)
+               << ",\"latitude\":" << jsonNumber(startingPointLatitude)
+               << ",\"longitude\":" << jsonNumber(startingPointLongitude)
+               << "},\"accommodationEstimate\":"
                << jsonNumber(stay == nullptr ? 0 : stay->price * nights)
                << ",\"accommodationWithinBudget\":"
                << (stay == nullptr || nightlyBudget <= 0 || stay->price <= nightlyBudget ? "true" : "false")

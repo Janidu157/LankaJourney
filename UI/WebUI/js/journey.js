@@ -1,5 +1,6 @@
 (() => {
   const journeyText = document.getElementById("journeySummary");
+  const journeyStartSummary = document.getElementById("journeyStartSummary");
   const mapMessage = document.getElementById("mapMessage");
   const stayDetails = document.getElementById("stayDetails");
   const journeyDays = document.getElementById("journeyDays");
@@ -15,6 +16,7 @@
 
   function showEmptyJourney() {
     journeyText.textContent = "No journey is available yet. Enter your preferences to create one.";
+    journeyStartSummary.textContent = "";
     mapMessage.textContent = "";
     const link = document.createElement("a");
     link.className = "btn btn-gold";
@@ -31,6 +33,9 @@
     }
 
     journeyText.textContent = journey.summary || "A journey planned around your requirements.";
+    journeyStartSummary.textContent = journey.startingPoint?.name
+      ? `Starting from ${journey.startingPoint.name}.`
+      : "";
     mapMessage.textContent = journey.mapMessage || "";
     initializeMap(journey);
 
@@ -172,6 +177,17 @@
     }).addTo(map);
 
     const points = [];
+    const startingPoint = journey?.startingPoint;
+    if (hasCoordinates(startingPoint)) {
+      points.push({
+        latitude: startingPoint.latitude,
+        longitude: startingPoint.longitude,
+        title: startingPoint.name || "Journey starting point",
+        description: "Journey starts here",
+        color: "#15803d"
+      });
+    }
+
     const stay = journey?.accommodation;
     if (hasCoordinates(stay)) {
       points.push({
