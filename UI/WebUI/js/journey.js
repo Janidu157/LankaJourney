@@ -170,13 +170,16 @@
   }
 
   function describeTravelRange(journey) {
+    if (journey.travelRange === "island-wide") {
+      return "Across Sri Lanka: destinations are selected for island-wide variety, then ordered into a route from your start.";
+    }
     return `${travelRangeLabel(journey)} from your start (straight-line distance).`;
   }
 
   function travelRangeLabel(journey) {
     if (journey.travelRange === "nearby") return "Nearby (up to 100 km)";
     if (journey.travelRange === "regional") return "Explore further (up to 250 km)";
-    return "Across Sri Lanka (no distance limit)";
+    return "Across Sri Lanka (island-wide variety prioritized)";
   }
 
   function initializeMap(journey) {

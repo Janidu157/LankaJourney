@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <cstddef>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -329,15 +330,88 @@ public:
 
     double distanceFromStartingPoint(const Place& place) const {
         if (!place.hasCoordinates) return std::numeric_limits<double>::infinity();
+        return distanceKm(startingPointLatitude, startingPointLongitude, place.latitude, place.longitude);
+    }
+
+    static double distanceKm(double latitude1, double longitude1, double latitude2, double longitude2) {
         constexpr double pi = 3.14159265358979323846;
-        const double latitude1 = startingPointLatitude * pi / 180;
-        const double latitude2 = place.latitude * pi / 180;
-        const double latitudeDelta = (place.latitude - startingPointLatitude) * pi / 180;
-        const double longitudeDelta = (place.longitude - startingPointLongitude) * pi / 180;
+        const double latitude1Radians = latitude1 * pi / 180;
+        const double latitude2Radians = latitude2 * pi / 180;
+        const double latitudeDelta = (latitude2 - latitude1) * pi / 180;
+        const double longitudeDelta = (longitude2 - longitude1) * pi / 180;
         const double haversine = std::sin(latitudeDelta / 2) * std::sin(latitudeDelta / 2) +
-            std::cos(latitude1) * std::cos(latitude2) *
+            std::cos(latitude1Radians) * std::cos(latitude2Radians) *
             std::sin(longitudeDelta / 2) * std::sin(longitudeDelta / 2);
         return 6371 * 2 * std::asin(std::sqrt(std::min(1.0, haversine)));
+    }
+
+    std::vector<Place> selectIslandWideStops(std::vector<Place> candidates) const {
+        std::vector<Place> selected;
+        selected.reserve(std::min(static_cast<size_t>(days), candidates.size()));
+
+        // Farthest-point selection prevents the start location from dominating island-wide plans.
+        while (!candidates.empty() && selected.size() < static_cast<size_t>(days)) {
+            size_t bestIndex = 0;
+            int bestScore = -1;
+            double bestSpread = -1;
+            for (size_t candidateIndex = 0; candidateIndex < candidates.size(); ++candidateIndex) {
+                const Place& candidate = candidates[candidateIndex];
+                const int score = preferenceScore(candidate);
+                double spread = candidate.hasCoordinates
+                    ? distanceFromStartingPoint(candidate)
+                    : -1;
+                if (candidate.hasCoordinates && !selected.empty()) {
+                    spread = std::numeric_limits<double>::infinity();
+                    bool compared = false;
+                    for (const Place& chosen : selected) {
+                        if (!chosen.hasCoordinates) continue;
+                        spread = std::min(spread, distanceKm(
+                            candidate.latitude, candidate.longitude, chosen.latitude, chosen.longitude));
+                        compared = true;
+                    }
+                    if (!compared) spread = distanceFromStartingPoint(candidate);
+                }
+
+                if (spread > bestSpread ||
+                    (spread == bestSpread && score > bestScore) ||
+                    (spread == bestSpread && score == bestScore &&
+                     candidate.name < candidates[bestIndex].name)) {
+                    bestIndex = candidateIndex;
+                    bestScore = score;
+                    bestSpread = spread;
+                }
+            }
+            selected.push_back(std::move(candidates[bestIndex]));
+            candidates.erase(candidates.begin() + static_cast<std::ptrdiff_t>(bestIndex));
+        }
+
+        std::vector<Place> routeOrder;
+        routeOrder.reserve(selected.size());
+        double currentLatitude = startingPointLatitude;
+        double currentLongitude = startingPointLongitude;
+        while (!selected.empty()) {
+            auto nearest = selected.end();
+            double nearestDistance = std::numeric_limits<double>::infinity();
+            for (auto candidate = selected.begin(); candidate != selected.end(); ++candidate) {
+                const double distance = candidate->hasCoordinates
+                    ? distanceKm(currentLatitude, currentLongitude, candidate->latitude, candidate->longitude)
+                    : std::numeric_limits<double>::infinity();
+                if (distance < nearestDistance ||
+                    (distance == nearestDistance && nearest != selected.end() &&
+                     candidate->name < nearest->name)) {
+                    nearest = candidate;
+                    nearestDistance = distance;
+                }
+            }
+            if (nearest == selected.end()) nearest = selected.begin();
+            if (nearest->hasCoordinates) {
+                currentLatitude = nearest->latitude;
+                currentLongitude = nearest->longitude;
+            }
+            routeOrder.push_back(std::move(*nearest));
+            selected.erase(nearest);
+        }
+        return routeOrder;
     }
 
     int preferenceScore(const Place& place) const {
@@ -419,19 +493,23 @@ public:
             }
             places.push_back(std::move(place));
         }
-        std::stable_sort(places.begin(), places.end(), [this](const Place& left, const Place& right) {
-            const int leftScore = preferenceScore(left);
-            const int rightScore = preferenceScore(right);
-            if (leftScore != rightScore) return leftScore > rightScore;
-            const double leftDistance = distanceFromStartingPoint(left);
-            const double rightDistance = distanceFromStartingPoint(right);
-            if (leftDistance != rightDistance) return leftDistance < rightDistance;
-            return left.name < right.name;
-        });
         places.erase(std::remove_if(places.begin(), places.end(), [this](const Place& place) {
             return preferenceScore(place) == 0 ||
                    distanceFromStartingPoint(place) > maximumDistanceKm();
         }), places.end());
+        if (travelRange == "island-wide") {
+            places = selectIslandWideStops(std::move(places));
+        } else {
+            std::stable_sort(places.begin(), places.end(), [this](const Place& left, const Place& right) {
+                const int leftScore = preferenceScore(left);
+                const int rightScore = preferenceScore(right);
+                if (leftScore != rightScore) return leftScore > rightScore;
+                const double leftDistance = distanceFromStartingPoint(left);
+                const double rightDistance = distanceFromStartingPoint(right);
+                if (leftDistance != rightDistance) return leftDistance < rightDistance;
+                return left.name < right.name;
+            });
+        }
 
         std::vector<Accommodation> accommodations;
         for (const JsonValue& item : input.get("accommodations").array) {
