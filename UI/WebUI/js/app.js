@@ -1,5 +1,5 @@
 const destinations = [
- {name:"Sigiriya",type:"Culture",district:"Matale",desc:"Ancient rock fortress and breathtaking views.",tag:"HERITAGE",img:"https://images.unsplash.com/photo-1588598198321-9735fd5d5e4b?auto=format&fit=crop&w=900&q=80"},
+ {name:"Sigiriya",type:"Culture",district:"Matale",desc:"Ancient rock fortress and breathtaking views.",tag:"HERITAGE",img:"https://images.unsplash.com/photo-1711797750174-c3750dd9d7c9?auto=format&fit=crop&w=900&q=80"},
  {name:"Galle Fort",type:"Beach",district:"Galle",desc:"Colonial streets, coastal views and charming cafés.",tag:"COASTAL",img:"https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=900&q=80"},
  {name:"Ella",type:"Nature",district:"Badulla",desc:"Misty hills, tea plantations and scenic train rides.",tag:"HIGHLANDS",img:"https://images.unsplash.com/photo-1586611292717-f828b167408c?auto=format&fit=crop&w=900&q=80"},
  {name:"Kandy",type:"Culture",district:"Kandy",desc:"Sacred temples, lake views and rich traditions.",tag:"CULTURE",img:"https://images.unsplash.com/photo-1580974852861-c381510bc98a?auto=format&fit=crop&w=900&q=80"},
